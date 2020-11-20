@@ -1,0 +1,25 @@
+{
+  "name": "file_processor_js",
+  "version": "1.0.0",
+  "description": "_This application runs all the time, without any breaks. Everytime new files become available, everything should be executed._",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R progress ./**/*.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Danilooa/file_processor_js.git"
+  },
+  "author": "https://github.com/Danilooa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Danilooa/file_processor_js/issues"
+  },
+  "homepage": "https://github.com/Danilooa/file_processor_js#readme",
+  "dependencies": {
+    "chai": "4.2.0",
+    "mocha": "8.2.1",
+    "sinon": "9.2.1",
+    "proxyquire": "2.1.3"
+  }
+}
