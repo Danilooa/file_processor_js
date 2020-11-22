@@ -1,5 +1,6 @@
 const appRoot = require(`app-root-path`);
-const { sale, string_to_items } = require(`${appRoot}/sale`);
+const { string_to_sale } = require(`${appRoot}/sale`);
+const { string_to_salesman } = require(`${appRoot}/salesman`);
 
 const row_layout = function ({ code, parse }) {
     this.code = code;
@@ -9,9 +10,7 @@ const row_layout = function ({ code, parse }) {
 const types = {
     SALESMAN: new row_layout({
         code: `001`,
-        parse: ({ row, separator }) => {
-            return row;
-        }
+        parse: string_to_salesman
     }),
 
     CUSTOMER: new row_layout({
@@ -23,15 +22,7 @@ const types = {
 
     SALE: new row_layout({
         code: `003`,
-        parse: ({ row, sale_separator, item_separator }) => {
-            const string_values = row.split(sale_separator);
-            return new sale({
-                row_layout: types_by_code[string_values[0]],
-                sale_id: parseInt(string_values[1]),
-                items: string_to_items({ separator: item_separator, string_item: string_values[2] }),
-                salesman_name: string_values[3]
-            });
-        }
+        parse: string_to_sale
     })
 }
 

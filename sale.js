@@ -4,11 +4,19 @@ function sale_item({ item_id, item_quantity, item_price }) {
     this.item_price = item_price;
 }
 
-function sale({ row_layout, sale_id, items = [], salesman_name }) {
-    this.row_layout = row_layout;
+function sale({ sale_id, items = [], salesman_name }) {
     this.sale_id = sale_id;
     this.items = items;
     this.salesman_name = salesman_name;
+}
+
+function string_to_sale({ row, sale_separator, item_separator }) {
+    const string_values = row.split(sale_separator);
+    return new sale({
+        sale_id: parseInt(string_values[1]),
+        items: string_to_items({ separator: item_separator, string_item: string_values[2] }),
+        salesman_name: string_values[3]
+    });
 }
 
 function string_to_items({ separator, string_item }) {
@@ -29,5 +37,6 @@ function string_to_items({ separator, string_item }) {
 module.exports = {
     sale_item: sale_item,
     sale: sale,
+    string_to_sale: string_to_sale,
     string_to_items: string_to_items
 }

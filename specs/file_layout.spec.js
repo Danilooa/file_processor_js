@@ -4,6 +4,7 @@ chai.use(require('chai-string'));
 const { expect } = chai;
 const row_layout = require(`${appRoot}/row_layout`);
 const { sale, sale_item } = require(`${appRoot}/sale`);;
+const { salesman } = require(`${appRoot}/salesman`);;
 
 describe("row_parse", () => {
     it("should identify the SALESMAN layout", () => {
@@ -22,6 +23,23 @@ describe("row_parse", () => {
         const row = `003ç08ç[1-34-10,2-33-1.50,3-40-0.10]çRenato`;
         const layout = row_layout.from_row({ separator: `ç`, row: row });
         expect(layout === row_layout.types.SALE).to.be.true;
+    });
+
+    it("should parse SALESMAN row", () => {
+        const string_row = `001ç1234567891234çDiegoç50000`;
+
+        const expected_salesman = new salesman({
+            row_layout: row_layout.types.CUSTOMER,
+            cpf: `1234567891234`,
+            name: `Diego`,
+            salary: parseFloat(`50000`)
+        });
+
+        const actual_salesman = row_layout
+            .from_row({ separator: `ç`, row: string_row })
+            .parse({ row: string_row, separator: `ç` });
+
+        expect(expected_salesman).to.eql(actual_salesman);
     });
 
     it("should parse SALE row", () => {
