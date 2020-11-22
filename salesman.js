@@ -1,4 +1,5 @@
-function salesman({ cpf, name, salary }) {
+function salesman({ row_layout = null, cpf, name, salary }) {
+    this.row_layout = row_layout;
     this.cpf = cpf;
     this.name = name;
     this.salary = salary;

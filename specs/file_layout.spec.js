@@ -5,6 +5,7 @@ const { expect } = chai;
 const row_layout = require(`${appRoot}/row_layout`);
 const { sale, sale_item } = require(`${appRoot}/sale`);;
 const { salesman } = require(`${appRoot}/salesman`);;
+const { customer } = require(`${appRoot}/customer`);;
 
 describe("row_parse", () => {
     it("should identify the SALESMAN layout", () => {
@@ -29,7 +30,6 @@ describe("row_parse", () => {
         const string_row = `001ç1234567891234çDiegoç50000`;
 
         const expected_salesman = new salesman({
-            row_layout: row_layout.types.CUSTOMER,
             cpf: `1234567891234`,
             name: `Diego`,
             salary: parseFloat(`50000`)
@@ -42,11 +42,25 @@ describe("row_parse", () => {
         expect(expected_salesman).to.eql(actual_salesman);
     });
 
+    it("should parse CUSTOMER row", () => {
+        const string_row = `002ç2345675434544345çJosedaSilvaçRural`;
+        const expected_customer = new customer({
+            cnpj: `2345675434544345`,
+            name: `JosedaSilva`,
+            business_area: `Rural`
+        });
+
+        const actual_customer = row_layout
+            .from_row({ separator: `ç`, row: string_row })
+            .parse({ row: string_row, separator: `ç` });
+
+        expect(expected_customer).to.eql(actual_customer);
+    });
+
     it("should parse SALE row", () => {
         const string_row = `003ç08ç[1-34-10,2-33-1.50,3-40-0.10]çRenato`;
 
         const expected_sale = new sale({
-            row_layout: row_layout.types.SALE,
             sale_id: parseInt(`08`),
             items: [
                 new sale_item({
