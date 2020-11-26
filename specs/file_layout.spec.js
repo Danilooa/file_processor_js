@@ -8,8 +8,12 @@ const row_layout = require(`${appRoot}/row_layout`);
 const { sale, sale_item } = require(`${appRoot}/sale`);;
 const { salesman } = require(`${appRoot}/salesman`);;
 const { customer } = require(`${appRoot}/customer`);;
-const file_processor = require(`${appRoot}/file_processor`);;
 const input_folder_watcher = require(`${appRoot}/input_folder_watcher`)
+
+const process_amount_of_clients = require(`${appRoot}/process_amount_of_clients`);
+const process_amount_of_salesmen = require(`${appRoot}/process_amount_of_salesmen`);
+const process_the_most_expensive_sale = require(`${appRoot}/process_the_most_expensive_sale`);
+const process_the_worst_salesman = require(`${appRoot}/process_the_worst_salesman`);
 
 describe("row_parse", () => {
     it("should identify the SALESMAN layout", () => {
@@ -92,12 +96,21 @@ describe("row_parse", () => {
 
         expect(expected_sale).to.eql(actual_sale);
     });
-    
+
     it("should process file when directory changes", () => {
-        const process_spy = sinon.spy(file_processor, `process`);
         const watch_stub = sinon.stub(fs, `watch`);
+
+        const spy_clients = sinon.spy(process_amount_of_clients, `run`);
+        const spy_salesmen = sinon.spy(process_amount_of_salesmen, `run`);
+        const spy_expensive = sinon.spy(process_the_most_expensive_sale, `run`);
+        const spy_salesman = sinon.spy(process_the_worst_salesman, `run`);
+
         input_folder_watcher.run();
         watch_stub.yield(`change`, `any_file.out`);
-        expect(process_spy.calledOnce).to.nested.true;
+
+        expect(spy_clients.calledOnce).to.nested.true;
+        expect(spy_salesmen.calledOnce).to.nested.true;
+        expect(spy_expensive.calledOnce).to.nested.true;
+        expect(spy_salesman.calledOnce).to.nested.true;
     });
 });
