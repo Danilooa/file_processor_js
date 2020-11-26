@@ -2,10 +2,14 @@ const appRoot = require(`app-root-path`);
 const chai = require(`chai`);
 chai.use(require('chai-string'));
 const { expect } = chai;
+const sinon = require(`sinon`);
+const fs = require(`fs`);
 const row_layout = require(`${appRoot}/row_layout`);
 const { sale, sale_item } = require(`${appRoot}/sale`);;
 const { salesman } = require(`${appRoot}/salesman`);;
 const { customer } = require(`${appRoot}/customer`);;
+const file_processor = require(`${appRoot}/file_processor`);;
+const input_folder_watcher = require(`${appRoot}/input_folder_watcher`)
 
 describe("row_parse", () => {
     it("should identify the SALESMAN layout", () => {
@@ -87,5 +91,13 @@ describe("row_parse", () => {
             .parse({ row: string_row, sale_separator: `ç`, item_separator: `-` });
 
         expect(expected_sale).to.eql(actual_sale);
+    });
+    
+    it("should process file when directory changes", () => {
+        const process_spy = sinon.spy(file_processor, `process`);
+        const watch_stub = sinon.stub(fs, `watch`);
+        input_folder_watcher.run();
+        watch_stub.yield(`change`, `any_file.out`);
+        expect(process_spy.calledOnce).to.nested.true;
     });
 });
